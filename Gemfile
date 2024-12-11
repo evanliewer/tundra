@@ -220,3 +220,4 @@ gem "pry"
 # that you run into a merge conflict in the future.
 
 # 🚅 super scaffolding will insert new oauth providers above this line.
+gem "font-awesome-rails"
