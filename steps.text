@@ -1,0 +1,180 @@
+rails g model Demographic team:references name:string sort_order:integer
+bin/super-scaffold crud Demographic Team name:text_field --sortable
+
+rails g model Department team:references name:string dashboard:boolean sort_order:integer
+bin/super-scaffold crud Department Team name:text_field dashboard:boolean --sortable
+
+rails g model Location team:references name:string initials:string capacity:integer hexcolor:string active:boolean sort_order:integer
+bin/super-scaffold crud Location Team name:text_field initials:text_field capacity:text_field hexcolor:color_picker active:buttons --sortable
+
+rails g model Organization team:references name:string address:string address_second:string city:string state:string zip:string website:string
+bin/super-scaffold crud Organization Team name:text_field address:text_field address_second:text_field city:text_field state:text_field zip:text_field website:text_field
+
+rails g model Resource team:references name:string location:references active:boolean overlap_offset:integer image_tag:string clean:boolean
+bin/super-scaffold crud Resource Team name:text_field location_id:super_select{class_name=Location} active:boolean overlap_offset:text_field image_tag:cloudinary_image clean:boolean
+
+rails g model Retreat team:references name:string arrival:datetime departure:datetime guest_count:integer organization:references
+bin/super-scaffold crud Retreat Team name:text_field arrival:date_and_time_field departure:date_and_time_field guest_count:text_field organization_id:super_select{class_name=Organization}
+
+rails g model Reservation team:references name:string retreat:references resource:references user:references start_time:datetime end_time:datetime quantity:integer notes:string seasonal_default:boolean exclusive:boolean
+
+bin/super-scaffold crud Reservation Team name:text_field retreat_id:super_select{class_name=Retreat} resource_id:super_select{class_name=Resource} user_id:super_select{class_name=Membership} start_time:date_and_time_field end_time:date_and_time_field quantity:text_field notes:text_field seasonal_default:boolean exclusive:boolean
+ rails g model Flight team:references name:string description:string external:boolean preflight:boolean warning:integer sort_order:integer
+ bin/super-scaffold crud Flight Team name:text_field description:text_field external:boolean preflight:boolean warning:text_field --sortable
+
+rails g model Resources::Option resource:references name:string capacity:integer image_tag:string sort_order:integer
+bin/super-scaffold crud Resources::Option Resource,Team name:text_field capacity:text_field image_tag:cloudinary_image --sortable
+
+*****************************************************************************************************************************
+rails g super_scaffold Demographic Team name:text_field --sortable
+rails g super_scaffold Department Team name:text_field dashboard:boolean --sortable
+rails g super_scaffold Location Team name:text_field initials:text_field capacity:number_field hex_color:color_picker active:buttons --sortable
+rails g super_scaffold Organization Team name:text_field address:address_field website:text_field
+rails g super_scaffold Item Team name:text_field description:text_field location_id:super_select{class_name=Location} active:boolean overlap_offset:number_field image_tag:image clean:boolean flip_time:number_field beds:number_field
+rails g super_scaffold Retreat Team name:text_field description:text_field arrival:date_and_time_field departure:date_and_time_field guest_count:number_field organization_id:super_select{class_name:Organization} internal:boolean active:boolean jotform:text_field
+
+rails g super_scaffold:join_model Retreats::LocationTag retreat_id{class_name=Retreat} location_id{class_name=Location}
+rails g super_scaffold:field Retreat location_ids:super_select{class_name=Location}
+
+rails g super_scaffold:join_model Retreats::DemographicTag retreat_id{class_name=Retreat} demographic_id{class_name=Demographic}
+rails g super_scaffold:field Retreat demographic_ids:super_select{class_name=Demographic}
+
+rails g super_scaffold:join_model Retreats::PlannerTag retreat_id{class_name=Retreat} planner_id{class_name=Membership}
+rails g super_scaffold:field Retreat planner_ids:super_select{class_name=Membership}
+
+rails g super_scaffold:join_model Retreats::HostTag retreat_id{class_name=Retreat} host_id{class_name=Membership}
+rails g super_scaffold:field Retreat host_ids:super_select{class_name=Membership}
+
+rails g super_scaffold Reservation Team name:text_field retreat_id:super_select{class_name=Retreat} item_id:super_select{class_name=Item} user_id:super_select{class_name=Membership} start_time:date_and_time_field end_time:date_and_time_field quantity:number_field notes:text_field seasonal_default:boolean exclusive:boolean active:boolean 
+
+
+rails g super_scaffold Items::Tag Team name:text_field ticketable:boolean schedulable:boolean optionable:boolean exclusivable:boolean cleanable:boolean publicable:boolean
+
+rails g super_scaffold:join_model Items::AppliedTag item_id{class_name=Item} tag_id{class_name=Items::Tag}
+rails g super_scaffold:field Item tag_ids:super_select{class_name=Items::Tag}
+
+
+
+rails g super_scaffold Flight Team name:text_field description:text_field external:boolean preflight:boolean warning:number_field --sortable
+rails g super_scaffold Flights::Timeframe Team name:text_field --sortable
+
+
+rails g super_scaffold:field Flight flights_timeframe_id:super_select{class_name=Flights::Timeframe}
+
+
+rails g super_scaffold Flights::Check Team name:text_field retreat_id:super_select{class_name=Retreat} flight_id:super_select{class_name=Flight} user_id:super_select{class_name=Membership} completed_at:date_and_time_field
+
+
+
+rails g super_scaffold Items::Option Item,Team name:text_field capacity:number_field image_tag:image --sortable
+
+
+rails g super_scaffold:join_model Departments::AppliedTag department_id{class_name=Department} tag_id{class_name=Items::Tag}
+rails g super_scaffold:field Department tag_ids:super_select{class_name=Items::Tag}
+
+rails g super_scaffold:field Items::Option description:text_field
+
+
+rails g super_scaffold Organizations::Contact Team first_name:text_field last_name:text_field job_title:text_field primary_phone:text_field email:email_field 
+
+
+rails g super_scaffold:join_model Retreats::AssignedContact retreat_id{class_name=Retreat} contact_id{class_name=Organizations::Contact}
+rails g super_scaffold:field Retreat contact_ids:super_select{class_name=Organizations::Contact}
+
+
+rails g super_scaffold Retreats::Comment Retreat,Team name:text_field user_id:super_select{class_name=Membership}
+
+rails g super_scaffold Notification Team name:text_field user_id:super_select{class_name=Membership} read_at:date_and_time_field action_text:text_field emailed:boolean       #####notifiable:references{polymorphic}:index
+
+
+rails g super_scaffold Notifications::Flag Team name:text_field department_id:super_select{class_name=Department}
+
+
+rails g model Notifications::Request team:references name:string user:references notifications_flag:references days_before:integer email:boolean
+bin/super-scaffold crud Notifications::Request Team name:text_field user_id:super_select{class_name=Membership} notifications_flag_id:super_select{class_name=Notifications::Flag} days_before:text_field email:boolean
+
+
+rails g super_scaffold Notifications::Request Team name:text_field user_id:super_select{class_name=Membership} notifications_flag_id:super_select{class_name=Notifications::Flag} days_before:text_field email:boolean
+
+rails g super_scaffold Season Team name:text_field item_id:super_select{class_name=Item} season_start:date_and_time_field season_end:date_and_time_field start_time:date_and_time_field end_time:date_and_time_field quantity:number_field notes:text_field
+
+
+rails g super_scaffold Question Team name:text_field description:text_field --sortable
+
+rails g super_scaffold:join_model Questions::LocationTag question_id{class_name=Question} location_id{class_name=Location}
+rails g super_scaffold:field Question location_ids:super_select{class_name=Location}
+
+rails g super_scaffold:join_model Questions::DemographicTag question_id{class_name=Question} demographic_id{class_name=Demographic}
+rails g super_scaffold:field Question demographic_ids:super_select{class_name=Demographic}
+
+
+
+rails g super_scaffold:field Item layout:file_field
+
+
+rails g super_scaffold Websiteimage Team name:text_field description:text_field image:image
+
+
+rails g migration add_item_query_to_team
+
+rails g super_scaffold:field Team item_query:text_field
+rails g super_scaffold:field Team circuitree_api:text_field
+rails g super_scaffold:field Team groups_query:text_field
+rails g super_scaffold:field Team reservation_download:text_field
+
+
+
+Powerpack
+bin/rails g bt_power_pack:filters:install
+bin/rails g super_scaffold:bt_power_pack:filter Item Team name:text_field description:text_field location:super_select
+
+
+rails g super_scaffold Retreats::Request Team retreat_id:super_select{class_name=Retreat} department_id:super_select{class_name=Department} notes:text_field
+
+
+
+JotForm
+Retreat ID
+First Name
+Last Name
+Dietary Restriction
+Phone
+
+rails g super_scaffold Retreats::Form Team retreat_id:super_select{class_name=Retreat} first_name:text_field last_name:text_field phone:text_field dietary_restriction:text_field
+
+rails g super_scaffold Items::Area Team name:text_field location_id:super_select{class_name=Location} --sortable
+rails g super_scaffold:field Item items_area_id:super_select{class_name=Items::Area}
+
+
+rails g super_scaffold:field reseravtion items_option_id:super_select(class_name=Items::Option)
+
+rails g super_scaffold Diet Team name:text_field --sortable
+rails g super_scaffold:field Medform diet_id:super_select{class_name=Diet}
+
+rails g super_scaffold:field Retreat actual_group_size:number_field
+
+
+
+rails g super_scaffold:field Medform gender:text_field address:address_field emergency_contact_name:text_field emergency_contact_phone:text_field emergency_contact_relationship:text_field terms:boolean form_for:text_field age:text_field
+
+rails generate super_scaffold:audit_logs Location Team name:text_field capacity:number_field
+
+
+rails g super_scaffold:field Retreat nps:number_field debrief:text_field
+
+
+rails g super_scaffold:field Diet abbreviation:text_field
+
+
+rails g super_scaffold:field Reservation dining_style:text_field
+
+
+rails g super_scaffold:bt_power_pack:filter Medform Team full_name:text_field
+
+rails g super_scaffold:field Retreat dining_style:text_field
+
+
+
+
+
+

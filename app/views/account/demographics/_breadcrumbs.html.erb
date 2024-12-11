@@ -1,0 +1,8 @@
+<% demographic ||= @demographic %>
+<% team ||= @team || demographic&.team %>
+<%= render 'account/teams/breadcrumbs', team: team %>
+<%= render 'account/shared/breadcrumb', label: t('.label'), url: [:account, team, :demographics] %>
+<% if demographic&.persisted? %>
+  <%= render 'account/shared/breadcrumb', label: demographic.label_string, url: [:account, demographic] %>
+<% end %>
+<%= render 'account/shared/breadcrumbs/actions', only_for: 'demographics' %>

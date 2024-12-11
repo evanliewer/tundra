@@ -22,6 +22,7 @@ import "@bullet-train/bullet-train"
 import "@bullet-train/bullet-train-sortable"
 
 require("@icon/themify-icons/themify-icons.css")
+require("@fortawesome/fontawesome-pro/css/all.css")
 
 import { trixEditor } from "@bullet-train/fields"
 trixEditor()
